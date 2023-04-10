@@ -592,6 +592,46 @@ func (c *TZKT) GetBigMapPointersByContract(contract string, tags ...string) ([]i
 	return pointer, nil
 }
 
+// GetBigMapsByContractAndPath get BitMap of contract
+func (c *TZKT) GetBigMapsByContractAndPath(contract string, path string) (int, error) {
+	u := url.URL{
+		Scheme: "https",
+		Host:   c.endpoint,
+		Path:   "/v1/bigmaps",
+		RawQuery: url.Values{
+			"contract": []string{contract},
+			"select":   []string{"ptr"},
+			"path":     []string{path},
+		}.Encode(),
+	}
+
+	fmt.Println(u)
+
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		return 0, err
+	}
+
+	resp, err := c.client.Do(req)
+	if err != nil {
+		return 0, err
+	}
+
+	defer resp.Body.Close()
+	var pointer []int
+
+	err = json.NewDecoder(resp.Body).Decode(&pointer)
+	if err != nil {
+		return 0, err
+	}
+
+	if len(pointer) == 0 {
+		return 0, fmt.Errorf("no pointer")
+	}
+
+	return pointer[0], nil
+}
+
 // GetBigMapPointerForContractTokenMetadata returns the bigmap pointer of token_metadata
 // for a specific contract
 func (c *TZKT) GetBigMapPointerForContractTokenMetadata(contract string) (int, error) {
@@ -605,4 +645,30 @@ func (c *TZKT) GetBigMapPointerForContractTokenMetadata(contract string) (int, e
 	}
 
 	return pointers[0], nil
+}
+
+// GetTokenBalanceOfOwner gets token balance of an owner
+func (c *TZKT) GetTokenBalanceOfOwner(contract, tokenID, owner string) (int, error) {
+	v := url.Values{
+		"account":        []string{owner},
+		"token.contract": []string{contract},
+		"token.tokenId":  []string{tokenID},
+		"token.standard": []string{"fa2"},
+	}
+
+	u := url.URL{
+		Scheme:   "https",
+		Host:     c.endpoint,
+		Path:     "/v1/tokens/balances/count",
+		RawQuery: v.Encode(),
+	}
+
+	var balance int
+
+	req, _ := http.NewRequest("GET", u.String(), nil)
+	if err := c.request(req, &balance); err != nil {
+		return balance, err
+	}
+
+	return balance, nil
 }

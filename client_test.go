@@ -1,6 +1,7 @@
 package tzkt
 
 import (
+	"fmt"
 	"testing"
 	"time"
 
@@ -177,4 +178,20 @@ func TestGetBigMapValueByPointer(t *testing.T) {
 	p, err := tc.GetBigMapValueByPointer(149772, "589146")
 	assert.NoError(t, err)
 	assert.Equal(t, `{"token_id":"589146","token_info":{"":"697066733a2f2f516d64453569635a4450476b623457754d7036377a3647463678543833765344385264415954635478375a6a764b"}}`, string(p))
+}
+
+func TestGetTokenBalanceOfOwner(t *testing.T) {
+	tc := New("")
+
+	value, err := tc.GetTokenBalanceOfOwner("KT1RJ6PbjHpwc3M5rw5s2Nbmefwbuwbdxton", "818282", "tz1UaGzw3MRwn7G9WQ5rRDs8tMCPqNw2JyQE")
+	fmt.Printf("value: %+v\n", value)
+	assert.NoError(t, err)
+}
+
+func TestGetBigMapsByContractAndPath(t *testing.T) {
+	tc := New("")
+
+	ptr, err := tc.GetBigMapsByContractAndPath("KT1RJ6PbjHpwc3M5rw5s2Nbmefwbuwbdxton", "token_metadata")
+	assert.NoError(t, err)
+	assert.Equal(t, 514, ptr)
 }
