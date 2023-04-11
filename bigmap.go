@@ -20,21 +20,14 @@ func (c *TZKT) GetBigMapValueByPointer(pointer int, key string) ([]byte, error) 
 		}.Encode(),
 	}
 
+	var results []json.RawMessage
+
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
 		return nil, err
 	}
 
-	resp, err := c.client.Do(req)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	var results []json.RawMessage
-
-	if err := json.NewDecoder(resp.Body).Decode(&results); err != nil {
+	if err := c.request(req, &results); err != nil {
 		return nil, err
 	}
 
@@ -64,21 +57,14 @@ func (c *TZKT) GetBigMapPointersByContract(contract string, tags ...string) ([]i
 		RawQuery: query.Encode(),
 	}
 
+	var pointer []int
+
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
 		return nil, err
 	}
 
-	resp, err := c.client.Do(req)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-	var pointer []int
-
-	err = json.NewDecoder(resp.Body).Decode(&pointer)
-	if err != nil {
+	if err := c.request(req, &pointer); err != nil {
 		return nil, err
 	}
 
@@ -98,23 +84,14 @@ func (c *TZKT) GetBigMapsByContractAndPath(contract string, path string) (int, e
 		}.Encode(),
 	}
 
-	fmt.Println(u)
+	var pointer []int
 
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
 		return 0, err
 	}
 
-	resp, err := c.client.Do(req)
-	if err != nil {
-		return 0, err
-	}
-
-	defer resp.Body.Close()
-	var pointer []int
-
-	err = json.NewDecoder(resp.Body).Decode(&pointer)
-	if err != nil {
+	if err := c.request(req, &pointer); err != nil {
 		return 0, err
 	}
 

@@ -44,7 +44,10 @@ func (c *TZKT) GetTransaction(id uint64) (TransactionDetails, error) {
 
 	var txs []TransactionDetails
 
-	req, _ := http.NewRequest("GET", u.String(), nil)
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		return TransactionDetails{}, err
+	}
 	if err := c.request(req, &txs); err != nil {
 		return TransactionDetails{}, err
 	}

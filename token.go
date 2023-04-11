@@ -25,7 +25,10 @@ func (c *TZKT) GetTokenBalanceOfOwner(contract, tokenID, owner string) (int, err
 
 	var balance int
 
-	req, _ := http.NewRequest("GET", u.String(), nil)
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		return balance, err
+	}
 	if err := c.request(req, &balance); err != nil {
 		return balance, err
 	}
@@ -56,7 +59,10 @@ func (c *TZKT) GetTokenOwners(contract, tokenID string, limit int, lastTime time
 
 	var owners []TokenOwner
 
-	req, _ := http.NewRequest("GET", u.String(), nil)
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 	if err := c.request(req, &owners); err != nil {
 		return nil, err
 	}
@@ -84,7 +90,11 @@ func (c *TZKT) GetTokenBalanceAndLastTimeForOwner(contract, tokenID, owner strin
 
 	var owners []TokenOwner
 
-	req, _ := http.NewRequest("GET", u.String(), nil)
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		return 0, time.Time{}, err
+	}
+
 	if err := c.request(req, &owners); err != nil {
 		return 0, time.Time{}, err
 	}
@@ -120,7 +130,11 @@ func (c *TZKT) GetTokenLastActivityTime(contract, tokenID string) (time.Time, er
 
 	var activityTime []time.Time
 
-	req, _ := http.NewRequest("GET", u.String(), nil)
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		return time.Time{}, err
+	}
+
 	if err := c.request(req, &activityTime); err != nil {
 		return time.Time{}, err
 	}
@@ -154,7 +168,11 @@ func (c *TZKT) GetTokenTransfers(contract, tokenID string, limit int) ([]TokenTr
 
 	var transfers []TokenTransfer
 
-	req, _ := http.NewRequest("GET", u.String(), nil)
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
 	if err := c.request(req, &transfers); err != nil {
 		return nil, err
 	}
@@ -182,6 +200,7 @@ func (c *TZKT) GetTokenTransfersCount(contract, tokenID string) (int, error) {
 	if err != nil {
 		return 0, err
 	}
+
 	if err := c.request(req, &count); err != nil {
 		return 0, err
 	}
@@ -212,7 +231,11 @@ func (c *TZKT) RetrieveTokens(owner string, lastTime time.Time, offset int) ([]O
 	}
 	var ownedTokens []OwnedToken
 
-	req, _ := http.NewRequest("GET", u.String(), nil)
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		return ownedTokens, err
+	}
+
 	if err := c.request(req, &ownedTokens); err != nil {
 		return ownedTokens, err
 	}
@@ -221,8 +244,6 @@ func (c *TZKT) RetrieveTokens(owner string, lastTime time.Time, offset int) ([]O
 }
 
 func (c *TZKT) GetContractToken(contract, tokenID string) (Token, error) {
-	var tokenResponse []Token
-
 	u := url.URL{
 		Scheme: "https",
 		Host:   c.endpoint,
@@ -233,7 +254,13 @@ func (c *TZKT) GetContractToken(contract, tokenID string) (Token, error) {
 		}.Encode(),
 	}
 
-	req, _ := http.NewRequest("GET", u.String(), nil)
+	var tokenResponse []Token
+
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		return Token{}, err
+	}
+
 	if err := c.request(req, &tokenResponse); err != nil {
 		return Token{}, err
 	}
