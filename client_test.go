@@ -1,7 +1,6 @@
 package tzkt
 
 import (
-	"fmt"
 	"testing"
 	"time"
 
@@ -147,11 +146,11 @@ func TestGetTokenOwners(t *testing.T) {
 	var startTime time.Time
 	var querLimit = 50
 
-	owners, err := tc.GetTokenOwners("KT1RJ6PbjHpwc3M5rw5s2Nbmefwbuwbdxton", "784317", querLimit, startTime)
+	owners, err := tc.GetTokenOwners("KT1U6EHmNxJTkvaWJ4ThczG4FSDaHC21ssvi", "1593829", querLimit, startTime)
 	assert.NoError(t, err)
-	assert.Len(t, owners, querLimit)
-	assert.Equal(t, owners[querLimit-1].Address, "tz1YuyeYd9VhZ5QWR1Q9X8ikiRcmMCvmKJWw")
-	assert.Equal(t, owners[querLimit-1].LastTime.Format(time.RFC3339), "2022-10-01T21:26:59Z")
+	assert.Len(t, owners, 1)
+	assert.Equal(t, owners[0].Address, "tz1burnburnburnburnburnburnburjAYjjX")
+	assert.Equal(t, owners[0].LastTime.Format(time.RFC3339), "2023-04-20T07:09:01Z")
 }
 
 func TestGetTokenOwnersNow(t *testing.T) {
@@ -184,8 +183,8 @@ func TestGetTokenBalanceOfOwner(t *testing.T) {
 	tc := New("")
 
 	value, err := tc.GetTokenBalanceOfOwner("KT1RJ6PbjHpwc3M5rw5s2Nbmefwbuwbdxton", "818282", "tz1UaGzw3MRwn7G9WQ5rRDs8tMCPqNw2JyQE")
-	fmt.Printf("value: %+v\n", value)
 	assert.NoError(t, err)
+	assert.Equal(t, value, 1)
 }
 
 func TestGetBigMapsByContractAndPath(t *testing.T) {

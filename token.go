@@ -7,6 +7,63 @@ import (
 	"time"
 )
 
+type FormatDimensions struct {
+	Unit  string `json:"unit"`
+	Value string `json:"value"`
+}
+
+type FileFormat struct {
+	URI        string           `json:"uri"`
+	FileName   string           `json:"fileName,omitempty"`
+	FileSize   int              `json:"fileSize,string"`
+	MIMEType   MIMEFormat       `json:"mimeType"`
+	Dimensions FormatDimensions `json:"dimensions,omitempty"`
+}
+
+type Token struct {
+	Contract    Account        `json:"contract"`
+	ID          TokenID        `json:"tokenId"`
+	Standard    string         `json:"standard"`
+	TotalSupply NullableInt    `json:"totalSupply,string"`
+	Timestamp   time.Time      `json:"firstTime"`
+	Metadata    *TokenMetadata `json:"metadata,omitempty"`
+}
+
+type OwnedToken struct {
+	Token    Token       `json:"token"`
+	Balance  NullableInt `json:"balance,string"`
+	LastTime time.Time   `json:"lastTime"`
+}
+
+type TokenMetadata struct {
+	Name         string       `json:"name"`
+	Description  string       `json:"description"`
+	Symbol       string       `json:"symbol"`
+	RightURI     string       `json:"rightUri"`
+	ArtifactURI  string       `json:"artifactUri"`
+	DisplayURI   string       `json:"displayUri"`
+	ThumbnailURI string       `json:"thumbnailUri"`
+	Publishers   []string     `json:"publishers"`
+	Creators     FileCreators `json:"creators"`
+	Formats      FileFormats  `json:"formats"`
+
+	ArtworkMetadata map[string]interface{} `json:"artworkMetadata"`
+}
+
+type TokenTransfer struct {
+	Timestamp     time.Time `json:"timestamp"`
+	Level         uint64    `json:"level"`
+	TransactionID uint64    `json:"transactionId"`
+	From          *Account  `json:"from"`
+	To            Account   `json:"to"`
+}
+
+type TokenOwner struct {
+	Address  string    `json:"address"`
+	Balance  int64     `json:"balance,string"`
+	LastTime time.Time `json:"lastTime"`
+}
+
 // GetTokenBalanceOfOwner gets token balance of an owner
 func (c *TZKT) GetTokenBalanceOfOwner(contract, tokenID, owner string) (int, error) {
 	v := url.Values{
