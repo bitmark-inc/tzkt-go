@@ -43,7 +43,7 @@ func (c *TZKT) GetTokenOwners(contract, tokenID string, limit int, lastTime time
 		"token.tokenId":  []string{tokenID},
 		"balance.gt":     []string{"0"},
 		"token.standard": []string{"fa2"},
-		"sort.asc":       []string{"lastTime"},
+		"sort.asc":       []string{"lastLevel"},
 		"limit":          []string{fmt.Sprintf("%d", limit)},
 		"select":         []string{"account.address as address,balance,lastTime"},
 	}
@@ -217,7 +217,9 @@ func (c *TZKT) RetrieveTokens(owner string, lastTime time.Time, offset int) ([]O
 		"offset":         []string{fmt.Sprintf("%d", offset)},
 		"balance.ge":     []string{"0"},
 		"token.standard": []string{"fa2"},
-		"sort":           []string{"lastTime"},
+		"sort.asc":       []string{"lastLevel"},
+		// NOTE: sorting over lastTime is not reliable in tzkt api. Use `lastLevel` instead
+		// For example: https://api.tzkt.io/v1/tokens/balances?account=tz2GoQHhadigAa56HnAXTGAYpYn8xUZsrG11&sort=lastTime&token.standard=fa2&balance.ge=0&lastTime.ge=2022-05-16T17:09:29Z
 	}
 
 	// prevent QueryEscape for colons in time
