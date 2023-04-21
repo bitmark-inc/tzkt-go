@@ -167,6 +167,41 @@ func (c *TZKT) GetTokenBalanceAndLastTimeForOwner(contract, tokenID, owner strin
 	return owners[0].Balance, owners[0].LastTime, nil
 }
 
+// GetTokenBalancesAndLastTimeForToken returns balance and last activity time of all owners for a specific token
+func (c *TZKT) GetTokenBalancesAndLastTimeForToken(contract, tokenID string) ([]TokenOwner, error) {
+	v := url.Values{
+		"token.contract": []string{contract},
+		"token.tokenId":  []string{tokenID},
+		"balance.gt":     []string{"0"},
+		"token.standard": []string{"fa2"},
+		"select":         []string{"lastTime,account.address as address,balance"},
+	}
+
+	u := url.URL{
+		Scheme:   "https",
+		Host:     c.endpoint,
+		Path:     "/v1/tokens/balances",
+		RawQuery: v.Encode(),
+	}
+
+	var owners []TokenOwner
+
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		return owners, err
+	}
+
+	if err := c.request(req, &owners); err != nil {
+		return owners, err
+	}
+
+	if len(owners) == 0 {
+		return owners, fmt.Errorf("token not found")
+	}
+
+	return owners, nil
+}
+
 // GetTokenLastActivityTime returns the timestamp of the last activity for a token
 func (c *TZKT) GetTokenLastActivityTime(contract, tokenID string) (time.Time, error) {
 	v := url.Values{

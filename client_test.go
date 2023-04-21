@@ -100,6 +100,14 @@ func TestGetTokenBalanceForOwner(t *testing.T) {
 	assert.NotEqual(t, lastTime, time.Time{})
 }
 
+func TestGetTokenBalancesAndLastTimeForToken(t *testing.T) {
+	tc := New("")
+
+	owners, err := tc.GetTokenBalancesAndLastTimeForToken("KT1RJ6PbjHpwc3M5rw5s2Nbmefwbuwbdxton", "751194")
+	assert.NoError(t, err)
+	assert.NotEqual(t, owners, TokenOwner{})
+}
+
 func TestGetArtworkMIMEType(t *testing.T) {
 	tc := New("")
 
