@@ -36,16 +36,17 @@ type OwnedToken struct {
 }
 
 type TokenMetadata struct {
-	Name         string       `json:"name"`
-	Description  string       `json:"description"`
-	Symbol       string       `json:"symbol"`
-	RightURI     string       `json:"rightUri"`
-	ArtifactURI  string       `json:"artifactUri"`
-	DisplayURI   string       `json:"displayUri"`
-	ThumbnailURI string       `json:"thumbnailUri"`
-	Publishers   []string     `json:"publishers"`
-	Creators     FileCreators `json:"creators"`
-	Formats      FileFormats  `json:"formats"`
+	Name            string       `json:"name"`
+	Description     string       `json:"description"`
+	Symbol          string       `json:"symbol"`
+	RightURI        string       `json:"rightUri"`
+	ArtifactURI     string       `json:"artifactUri"`
+	DisplayURI      string       `json:"displayUri"`
+	IsBooleanAmount bool         `json:"isBooleanAmount"`
+	ThumbnailURI    string       `json:"thumbnailUri"`
+	Publishers      []string     `json:"publishers"`
+	Creators        FileCreators `json:"creators"`
+	Formats         FileFormats  `json:"formats"`
 
 	ArtworkMetadata map[string]interface{} `json:"artworkMetadata"`
 }
