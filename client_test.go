@@ -12,14 +12,17 @@ func TestGetContractToken(t *testing.T) {
 
 	token, err := tc.GetContractToken("KT1LjmAdYQCLBjwv4S2oFkEzyHVkomAf5MrW", "24216")
 	assert.NoError(t, err)
+	assert.False(t, token.LastTime.IsZero())
 	assert.Equal(t, token.Contract.Alias, "Versum Items")
 
 	token2, err := tc.GetContractToken("KT1NVvPsNDChrLRH5K2cy6Sc9r1uuUwdiZQd", "5084") // token with string formats
 	assert.NoError(t, err)
+	assert.False(t, token2.LastTime.IsZero())
 	assert.Len(t, token2.Metadata.Formats, 3)
 
 	token3, err := tc.GetContractToken("KT1RJ6PbjHpwc3M5rw5s2Nbmefwbuwbdxton", "777619")
 	assert.NoError(t, err)
+	assert.False(t, token3.LastTime.IsZero())
 	assert.Len(t, token3.Metadata.Formats, 3)
 }
 
@@ -184,7 +187,7 @@ func TestGetTokenBalanceOfOwner(t *testing.T) {
 
 	value, err := tc.GetTokenBalanceOfOwner("KT1RJ6PbjHpwc3M5rw5s2Nbmefwbuwbdxton", "818282", "tz1UaGzw3MRwn7G9WQ5rRDs8tMCPqNw2JyQE")
 	assert.NoError(t, err)
-	assert.Equal(t, value, 1)
+	assert.Equal(t, value, int64(1))
 }
 
 func TestGetBigMapsByContractAndPath(t *testing.T) {

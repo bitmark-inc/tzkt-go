@@ -26,6 +26,7 @@ type Token struct {
 	Standard    string         `json:"standard"`
 	TotalSupply NullableInt    `json:"totalSupply,string"`
 	Timestamp   time.Time      `json:"firstTime"`
+	LastTime    time.Time      `json:"lastTime"`
 	Metadata    *TokenMetadata `json:"metadata,omitempty"`
 }
 
@@ -66,7 +67,7 @@ type TokenOwner struct {
 }
 
 // GetTokenBalanceOfOwner gets token balance of an owner
-func (c *TZKT) GetTokenBalanceOfOwner(contract, tokenID, owner string) (int, error) {
+func (c *TZKT) GetTokenBalanceOfOwner(contract, tokenID, owner string) (int64, error) {
 	v := url.Values{
 		"account":        []string{owner},
 		"token.contract": []string{contract},
@@ -81,7 +82,7 @@ func (c *TZKT) GetTokenBalanceOfOwner(contract, tokenID, owner string) (int, err
 		RawQuery: v.Encode(),
 	}
 
-	var balance int
+	var balance int64
 
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
