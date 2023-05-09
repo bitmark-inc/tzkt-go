@@ -43,7 +43,7 @@ type TokenMetadata struct {
 	RightURI        string       `json:"rightUri"`
 	ArtifactURI     string       `json:"artifactUri"`
 	DisplayURI      string       `json:"displayUri"`
-	IsBooleanAmount bool         `json:"isBooleanAmount"`
+	IsBooleanAmount StringBool   `json:"isBooleanAmount"`
 	ThumbnailURI    string       `json:"thumbnailUri"`
 	Publishers      []string     `json:"publishers"`
 	Creators        FileCreators `json:"creators"`

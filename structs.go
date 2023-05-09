@@ -25,6 +25,22 @@ func (t *NullableInt) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// StringBool is a type that accepts a bool can be either string or boolean
+type StringBool bool
+
+func (b *StringBool) UnmarshalJSON(data []byte) error {
+	var _b bool
+
+	err := json.Unmarshal(bytes.Trim(data, `"`), &_b)
+	if err != nil {
+		return nil
+	}
+
+	*b = StringBool(_b)
+
+	return nil
+}
+
 type MIMEFormat string
 
 func (m *MIMEFormat) UnmarshalJSON(data []byte) error {
