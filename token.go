@@ -46,6 +46,7 @@ type TokenMetadata struct {
 	IsBooleanAmount StringBool   `json:"isBooleanAmount"`
 	ThumbnailURI    string       `json:"thumbnailUri"`
 	Publishers      []string     `json:"publishers"`
+	Minter          string       `json:"minter"`
 	Creators        FileCreators `json:"creators"`
 	Formats         FileFormats  `json:"formats"`
 
