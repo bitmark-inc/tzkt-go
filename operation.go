@@ -3,6 +3,7 @@ package tzkt
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"net/url"
 	"time"
@@ -39,6 +40,30 @@ type DetailedTransaction struct {
 	Timestamp time.Time            `json:"timestamp"`
 	ID        uint64               `json:"id"`
 	Hash      string               `json:"hash"`
+}
+
+// GetTransactionByTx gets transaction details from a specific Tx
+// confirmed => "true"; failed => "false"; pending => "";
+func (c *TZKT) GetTransactionStatusByTx(hash string) (string, error) {
+	u := url.URL{
+		Scheme: "https",
+		Host:   c.endpoint,
+		Path:   fmt.Sprintf("%s/%s/%s", "/v1/operations/transactions", hash, "status"),
+	}
+
+	resp, err := c.client.Get(u.String())
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+
+	b, err := io.ReadAll(resp.Body)
+
+	if err != nil {
+		return "", err
+	}
+
+	return string(b), nil
 }
 
 // GetTransactionByTx gets transaction details from a specific Tx
