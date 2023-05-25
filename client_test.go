@@ -7,6 +7,22 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestGetTxStatus(t *testing.T) {
+	tc := New("testnet")
+
+	status, err := tc.GetTransactionStatusByTx("onk7fqQf7NNvG9BR5DFchnj4pKb9f5RdgkF89wMmUERLve2gS6N")
+	assert.NoError(t, err)
+	assert.Equal(t, *status, true)
+}
+
+func TestGetTxStatusNotConfirmed(t *testing.T) {
+	tc := New("")
+
+	status, err := tc.GetTransactionStatusByTx("onk7fqQf7NNvG9BR5DFchnj4pKb9f5RdgkF89wMmUERLve2gS6N")
+	assert.NoError(t, err)
+	assert.Nil(t, status)
+}
+
 func TestGetContractToken(t *testing.T) {
 	tc := New("")
 
