@@ -12,7 +12,7 @@ func TestGetTxStatus(t *testing.T) {
 
 	status, err := tc.GetTransactionStatusByTx("onk7fqQf7NNvG9BR5DFchnj4pKb9f5RdgkF89wMmUERLve2gS6N")
 	assert.NoError(t, err)
-	assert.Equal(t, status, "true")
+	assert.Equal(t, *status, true)
 }
 
 func TestGetTxStatusNotConfirmed(t *testing.T) {
@@ -20,7 +20,7 @@ func TestGetTxStatusNotConfirmed(t *testing.T) {
 
 	status, err := tc.GetTransactionStatusByTx("onk7fqQf7NNvG9BR5DFchnj4pKb9f5RdgkF89wMmUERLve2gS6N")
 	assert.NoError(t, err)
-	assert.Equal(t, status, "")
+	assert.Nil(t, status)
 }
 
 func TestGetContractToken(t *testing.T) {

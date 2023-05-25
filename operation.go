@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"strconv"
 	"time"
 )
 
@@ -43,8 +44,8 @@ type DetailedTransaction struct {
 }
 
 // GetTransactionByTx gets transaction details from a specific Tx
-// confirmed => "true"; failed => "false"; pending => "";
-func (c *TZKT) GetTransactionStatusByTx(hash string) (string, error) {
+// confirmed => true; failed => false; pending => nil
+func (c *TZKT) GetTransactionStatusByTx(hash string) (*bool, error) {
 	u := url.URL{
 		Scheme: "https",
 		Host:   c.endpoint,
@@ -53,17 +54,21 @@ func (c *TZKT) GetTransactionStatusByTx(hash string) (string, error) {
 
 	resp, err := c.client.Get(u.String())
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	defer resp.Body.Close()
 
 	b, err := io.ReadAll(resp.Body)
 
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
-	return string(b), nil
+	status, err := strconv.ParseBool(string(b))
+	if err != nil {
+		return nil, nil
+	}
+	return &status, nil
 }
 
 // GetTransactionByTx gets transaction details from a specific Tx
