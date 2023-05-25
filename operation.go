@@ -58,6 +58,10 @@ func (c *TZKT) GetTransactionStatusByTx(hash string) (*bool, error) {
 	}
 	defer resp.Body.Close()
 
+	if resp.StatusCode < 200 || resp.StatusCode >= 400 {
+		return nil, fmt.Errorf("failed to get transaction status: %s", resp.Status)
+	}
+
 	b, err := io.ReadAll(resp.Body)
 
 	if err != nil {
