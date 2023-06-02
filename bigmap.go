@@ -80,7 +80,7 @@ func (c *TZKT) GetBigMapsByContractAndPath(contract string, path string) (int, e
 		RawQuery: url.Values{
 			"contract": []string{contract},
 			"select":   []string{"ptr"},
-			"path":     []string{path},
+			"key":      []string{path},
 		}.Encode(),
 	}
 
