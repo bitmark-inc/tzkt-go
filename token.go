@@ -15,7 +15,7 @@ type FormatDimensions struct {
 type FileFormat struct {
 	URI        string           `json:"uri"`
 	FileName   string           `json:"fileName,omitempty"`
-	FileSize   int              `json:"fileSize,string"`
+	FileSize   FlexInt64        `json:"fileSize,string"`
 	MIMEType   MIMEFormat       `json:"mimeType"`
 	Dimensions FormatDimensions `json:"dimensions,omitempty"`
 }
@@ -43,7 +43,7 @@ type TokenMetadata struct {
 	RightURI        string       `json:"rightUri"`
 	ArtifactURI     string       `json:"artifactUri"`
 	DisplayURI      string       `json:"displayUri"`
-	IsBooleanAmount StringBool   `json:"isBooleanAmount"`
+	IsBooleanAmount FlexBool     `json:"isBooleanAmount"`
 	ThumbnailURI    string       `json:"thumbnailUri"`
 	Publishers      []string     `json:"publishers"`
 	Minter          string       `json:"minter"`
