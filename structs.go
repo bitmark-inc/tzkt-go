@@ -8,6 +8,17 @@ import (
 	"strings"
 )
 
+// FlexInt64 is a int64 type that accepts either string or int value when Unmarshaling
+type FlexInt64 int64
+
+func (fi *FlexInt64) UnmarshalJSON(data []byte) error {
+	if data[0] != '"' {
+		return json.Unmarshal(data, (*int64)(fi))
+	}
+
+	return json.Unmarshal(bytes.Trim(data, `"`), (*int64)(fi))
+}
+
 type NullableInt int64
 
 func (t *NullableInt) UnmarshalJSON(data []byte) error {
@@ -25,10 +36,10 @@ func (t *NullableInt) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// StringBool is a type that accepts a bool can be either string or boolean
-type StringBool bool
+// FlexBool is a bool type that accepts either string or bool value when Unmarshaling
+type FlexBool bool
 
-func (b *StringBool) UnmarshalJSON(data []byte) error {
+func (b *FlexBool) UnmarshalJSON(data []byte) error {
 	var _b bool
 
 	err := json.Unmarshal(bytes.Trim(data, `"`), &_b)
@@ -36,7 +47,7 @@ func (b *StringBool) UnmarshalJSON(data []byte) error {
 		return nil
 	}
 
-	*b = StringBool(_b)
+	*b = FlexBool(_b)
 
 	return nil
 }
