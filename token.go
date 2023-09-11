@@ -59,6 +59,8 @@ type TokenTransfer struct {
 	TransactionID uint64    `json:"transactionId"`
 	From          *Account  `json:"from"`
 	To            Account   `json:"to"`
+	Amount        *string   `json:"amount"`
+	Token         *Token    `json:"token"`
 }
 
 type TokenOwner struct {
@@ -217,6 +219,38 @@ func (c *TZKT) GetTokenTransfers(contract, tokenID string, limit int) ([]TokenTr
 		"token.standard": []string{"fa2"},
 		"limit":          []string{fmt.Sprint(limit)},
 		"select":         []string{"timestamp,from,to,transactionId,level"},
+	}
+
+	u := url.URL{
+		Scheme:   "https",
+		Host:     c.endpoint,
+		Path:     "/v1/tokens/transfers",
+		RawQuery: v.Encode(),
+	}
+
+	var transfers []TokenTransfer
+
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := c.request(req, &transfers); err != nil {
+		return nil, err
+	}
+
+	return transfers, nil
+}
+
+func (c *TZKT) GetTokenTransfersFromLevel(level string, limit int) ([]TokenTransfer, error) {
+	if limit == 0 {
+		limit = 100
+	}
+
+	v := url.Values{
+		"level.ge": []string{level},
+		"sort":     []string{"level"},
+		"limit":    []string{fmt.Sprint(limit)},
 	}
 
 	u := url.URL{
