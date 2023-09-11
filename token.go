@@ -242,7 +242,7 @@ func (c *TZKT) GetTokenTransfers(contract, tokenID string, limit int) ([]TokenTr
 	return transfers, nil
 }
 
-func (c *TZKT) GetTokenTransfersFromLevel(level string, limit int) ([]TokenTransfer, error) {
+func (c *TZKT) GetTokenTransfersByLevel(level string, limit int) ([]TokenTransfer, error) {
 	if limit == 0 {
 		limit = 100
 	}
