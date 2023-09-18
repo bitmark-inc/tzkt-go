@@ -242,7 +242,7 @@ func (c *TZKT) GetTokenTransfers(contract, tokenID string, limit int) ([]TokenTr
 	return transfers, nil
 }
 
-func (c *TZKT) GetTokenTransfersByLevel(level string, limit int) ([]TokenTransfer, error) {
+func (c *TZKT) GetTokenTransfersByLevel(level string, offset, limit int) ([]TokenTransfer, error) {
 	if limit == 0 {
 		limit = 100
 	}
@@ -250,6 +250,7 @@ func (c *TZKT) GetTokenTransfersByLevel(level string, limit int) ([]TokenTransfe
 	v := url.Values{
 		"level.ge": []string{level},
 		"sort":     []string{"level"},
+		"offset":   []string{fmt.Sprint(offset)},
 		"limit":    []string{fmt.Sprint(limit)},
 	}
 
