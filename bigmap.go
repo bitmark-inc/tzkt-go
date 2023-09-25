@@ -10,10 +10,10 @@ import (
 )
 
 type BigmapUpdate struct {
-	ID        int64     `json:"id"`
-	Level     int64     `json:"level"`
+	ID        uint64    `json:"id"`
+	Level     uint64    `json:"level"`
 	Timestamp time.Time `json:"timestamp"`
-	Bigmap    int64     `json:"bigmap"`
+	Bigmap    uint64    `json:"bigmap"`
 	Contract  Account   `json:"contract"`
 	Path      string    `json:"path"`
 	Action    string    `json:"action"`
