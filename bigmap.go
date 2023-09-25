@@ -6,17 +6,18 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"time"
 )
 
 type BigmapUpdate struct {
-	ID        int64   `json:"id"`
-	Level     int64   `json:"level"`
-	Timestamp string  `json:"timestamp"`
-	Bigmap    int64   `json:"bigmap"`
-	Contract  Account `json:"contract"`
-	Path      string  `json:"path"`
-	Action    string  `json:"action"`
-	Content   Content `json:"content"`
+	ID        int64     `json:"id"`
+	Level     int64     `json:"level"`
+	Timestamp time.Time `json:"timestamp"`
+	Bigmap    int64     `json:"bigmap"`
+	Contract  Account   `json:"contract"`
+	Path      string    `json:"path"`
+	Action    string    `json:"action"`
+	Content   Content   `json:"content"`
 }
 
 type Content struct {
@@ -139,7 +140,7 @@ func (c *TZKT) GetBigMapPointerForContractTokenMetadata(contract string) (int, e
 }
 
 // GetBigmapUpdatesByLevel returns the bigmap updates of given tags
-func (c *TZKT) GetBigmapUpdatesByLevel(tags []string, level string, offset, limit int) ([]BigmapUpdate, error) {
+func (c *TZKT) GetTokenMetadataBigmapUpdatesByLevel(level string, offset, limit int) ([]BigmapUpdate, error) {
 	if limit == 0 {
 		limit = 100
 	}
@@ -149,7 +150,7 @@ func (c *TZKT) GetBigmapUpdatesByLevel(tags []string, level string, offset, limi
 		"sort":     []string{"level"},
 		"offset":   []string{fmt.Sprint(offset)},
 		"limit":    []string{fmt.Sprint(limit)},
-		"tags.any": tags,
+		"tags.any": []string{"token_metadata"},
 	}
 
 	u := url.URL{
