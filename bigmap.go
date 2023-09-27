@@ -146,11 +146,12 @@ func (c *TZKT) GetTokenMetadataBigmapUpdatesByLevel(level string, offset, limit 
 	}
 
 	v := url.Values{
-		"level.ge": []string{level},
-		"sort":     []string{"level"},
-		"offset":   []string{fmt.Sprint(offset)},
-		"limit":    []string{fmt.Sprint(limit)},
-		"tags.any": []string{"token_metadata"},
+		"level.ge":  []string{level},
+		"sort":      []string{"level"},
+		"offset":    []string{fmt.Sprint(offset)},
+		"limit":     []string{fmt.Sprint(limit)},
+		"tags.any":  []string{"token_metadata"},
+		"action.ni": []string{"add_key", "allocate"},
 	}
 
 	u := url.URL{
