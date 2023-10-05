@@ -248,7 +248,7 @@ func (c *TZKT) GetTokenTransfersByLevel(level string, offset, limit int) ([]Toke
 	}
 
 	v := url.Values{
-		"level.ge": []string{level},
+		"level.eq": []string{level},
 		"sort":     []string{"level"},
 		"offset":   []string{fmt.Sprint(offset)},
 		"limit":    []string{fmt.Sprint(limit)},

@@ -1,6 +1,7 @@
 package tzkt
 
 import (
+	"fmt"
 	"testing"
 	"time"
 
@@ -13,6 +14,15 @@ func TestGetTxStatus(t *testing.T) {
 	status, err := tc.GetTransactionStatusByTx("onk7fqQf7NNvG9BR5DFchnj4pKb9f5RdgkF89wMmUERLve2gS6N")
 	assert.NoError(t, err)
 	assert.Equal(t, *status, true)
+}
+
+func TestGetLevelByTime(t *testing.T) {
+	tc := New("testnet")
+
+	level, err := tc.GetLevelByTime(time.Unix(1695957455, 0))
+	fmt.Println(level)
+	assert.NoError(t, err)
+	assert.Equal(t, level, uint64(4030701))
 }
 
 func TestGetTxStatusNotConfirmed(t *testing.T) {
