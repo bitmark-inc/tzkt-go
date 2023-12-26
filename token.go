@@ -31,9 +31,10 @@ type Token struct {
 }
 
 type OwnedToken struct {
-	Token    Token       `json:"token"`
-	Balance  NullableInt `json:"balance,string"`
-	LastTime time.Time   `json:"lastTime"`
+	Token     Token       `json:"token"`
+	Balance   NullableInt `json:"balance,string"`
+	FirstTime time.Time   `json:"firstTime"`
+	LastTime  time.Time   `json:"lastTime"`
 }
 
 type TokenMetadata struct {
