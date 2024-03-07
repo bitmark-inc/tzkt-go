@@ -65,9 +65,10 @@ type TokenTransfer struct {
 }
 
 type TokenOwner struct {
-	Address  string    `json:"address"`
-	Balance  int64     `json:"balance,string"`
-	LastTime time.Time `json:"lastTime"`
+	Address     string    `json:"address"`
+	Balance     int64     `json:"balance,string"`
+	LastTime    time.Time `json:"lastTime"`
+	TotalSupply int64     `json:"totalSupply,string,omitempty"`
 }
 
 // GetTokenBalanceOfOwner gets token balance of an owner
@@ -108,7 +109,7 @@ func (c *TZKT) GetTokenOwners(contract, tokenID string, limit int, lastTime time
 		"token.standard": []string{"fa2"},
 		"sort.asc":       []string{"lastLevel"},
 		"limit":          []string{fmt.Sprintf("%d", limit)},
-		"select":         []string{"account.address as address,balance,lastTime"},
+		"select":         []string{"account.address as address,balance,lastTime,token.totalSupply as totalSupply"},
 	}
 
 	rawQuery := v.Encode() + "&lastTime.ge=" + lastTime.UTC().Format(time.RFC3339)
