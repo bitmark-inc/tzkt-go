@@ -7,23 +7,24 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
+	"strings"
 	"time"
 )
 
 type TxsFormat struct {
-	To      string `json:"to_"`
-	Amount  string `json:"amount"`
-	TokenID string `json:"token_id"`
+	To      string `json:"to_" mapstructure:"to_"`
+	Amount  string `json:"amount" mapstructure:"amount"`
+	TokenID string `json:"token_id" mapstructure:"token_id"`
 }
 
 type ParametersValue struct {
-	From string      `json:"from_"`
-	Txs  []TxsFormat `json:"txs"`
+	From string      `json:"from_" mapstructure:"from_"`
+	Txs  []TxsFormat `json:"txs" mapstructure:"txs"`
 }
 
 type TransactionParameter struct {
-	EntryPoint string            `json:"entrypoint"`
-	Value      []ParametersValue `json:"value"`
+	EntryPoint string      `json:"entrypoint"`
+	Value      interface{} `json:"value"`
 }
 
 type Transaction struct {
@@ -35,12 +36,15 @@ type Transaction struct {
 }
 
 type DetailedTransaction struct {
-	Block     string               `json:"block"`
-	Parameter TransactionParameter `json:"parameter"`
-	Target    Account              `json:"target"`
-	Timestamp time.Time            `json:"timestamp"`
-	ID        uint64               `json:"id"`
-	Hash      string               `json:"hash"`
+	Block     string                `json:"block"`
+	Parameter *TransactionParameter `json:"parameter"`
+	Initiator *Account              `json:"initiator"`
+	Sender    Account               `json:"sender"`
+	Target    Account               `json:"target"`
+	Timestamp time.Time             `json:"timestamp"`
+	ID        uint64                `json:"id"`
+	Hash      string                `json:"hash"`
+	Amount    uint64                `json:"amount"`
 }
 
 // GetTransactionByTx gets transaction details from a specific Tx
@@ -124,4 +128,39 @@ func (c *TZKT) GetTransaction(id uint64) (Transaction, error) {
 		return Transaction{}, fmt.Errorf("transaction not found")
 	}
 	return txs[0], nil
+}
+
+func (c *TZKT) GetTransactions(contracts []string, entrypoints []string, lastTime *time.Time, offset, limit int) ([]Transaction, error) {
+	target := strings.Join(contracts, ",")
+	entrypoint := strings.Join(entrypoints, ",")
+	v := url.Values{
+		"target.in":     []string{target},
+		"entrypoint.in": []string{entrypoint},
+		"offset":        []string{fmt.Sprintf("%d", offset)},
+		"limit":         []string{fmt.Sprintf("%d", limit)},
+	}
+
+	rawQuery := v.Encode()
+	if lastTime != nil {
+		rawQuery += "&timestamp.gt=" + lastTime.UTC().Format(time.RFC3339)
+	}
+
+	u := url.URL{
+		Scheme:   "https",
+		Host:     c.endpoint,
+		Path:     "/v1/operations/transactions",
+		RawQuery: rawQuery,
+	}
+
+	var txs []Transaction
+
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+	if err := c.request(req, &txs); err != nil {
+		return nil, err
+	}
+
+	return txs, nil
 }
