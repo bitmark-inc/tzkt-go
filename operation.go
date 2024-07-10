@@ -130,13 +130,14 @@ func (c *TZKT) GetTransaction(id uint64) (Transaction, error) {
 	return txs[0], nil
 }
 
-func (c *TZKT) GetTransactions(contracts []string, entrypoint string, lastTime *time.Time, offset, limit int) ([]Transaction, error) {
+func (c *TZKT) GetTransactions(contracts []string, entrypoints []string, lastTime *time.Time, offset, limit int) ([]Transaction, error) {
 	target := strings.Join(contracts, ",")
+	entrypoint := strings.Join(entrypoints, ",")
 	v := url.Values{
-		"target.in":  []string{target},
-		"entrypoint": []string{entrypoint},
-		"offset":     []string{fmt.Sprintf("%d", offset)},
-		"limit":      []string{fmt.Sprintf("%d", limit)},
+		"target.in":     []string{target},
+		"entrypoint.in": []string{entrypoint},
+		"offset":        []string{fmt.Sprintf("%d", offset)},
+		"limit":         []string{fmt.Sprintf("%d", limit)},
 	}
 
 	rawQuery := v.Encode()
