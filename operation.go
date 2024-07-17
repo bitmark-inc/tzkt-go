@@ -45,6 +45,7 @@ type DetailedTransaction struct {
 	ID        uint64                `json:"id"`
 	Hash      string                `json:"hash"`
 	Amount    uint64                `json:"amount"`
+	Status    string                `json:"status"`
 }
 
 // GetTransactionByTx gets transaction details from a specific Tx
